@@ -1,0 +1,33 @@
+### WARNING: If librestbed.so cannot be found, use the following command: 
+###
+### export LD_LIBRARY_PATH=/usr/local/lib/restbed/distribution/library
+###
+
+ifndef RESTBED_MODULES_PATH
+export RESTBED_MODULES_PATH=/home/mfchrist/cernbox/restbedtests/restbed
+endif
+
+INCLUDE = -I"$(RESTBED_MODULES_PATH)/distribution/include/"
+LIBRARIES = -L"$(RESTBED_MODULES_PATH)/distribution/library" -lrestbed
+
+CC=gcc
+CXX=g++  -Wno-unused-result -std=c++11 -fuse-ld=bfd
+RM=rm -f
+CPPFLAGS=-c -Wall
+LDFLAGS=-g $(INCLUDE)
+LDLIBS=$(LIBRARIES)
+
+SOURCES=example.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=example
+
+all: $(SOURCES) $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJECTS)
+    $(CXX) $(LDFLAGS) $(OBJECTS) -o $@ $(LDLIBS)
+
+.cpp.o:
+    $(CXX) $(LDFLAGS) $(CPPFLAGS) $< -o $@ $(LDLIBS)
+
+clean:
+    $(RM) $(OBJECTS) $(EXECUTABLE)
